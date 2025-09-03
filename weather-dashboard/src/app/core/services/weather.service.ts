@@ -5,12 +5,12 @@ import { catchError, map } from 'rxjs/operators';
 import { CurrentWeather, ForecastData, WeatherUnit } from '../models/weather.model';
 import { environment } from '../../../environments/environment';
 import { ToastService } from './toast.service';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WeatherService {
-  private readonly API_KEY = environment.openWeatherMapApiKey;
   private readonly BASE_URL = 'https://api.openweathermap.org/data/2.5';
   private readonly REQUEST_TIMEOUT = 10000; // 10 seconds
   private readonly RETRY_COUNT = 2;
@@ -18,6 +18,11 @@ export class WeatherService {
 
   private http = inject(HttpClient);
   private toastService = inject(ToastService);
+  private configService = inject(ConfigService);
+
+  private get API_KEY(): string {
+    return this.configService.openWeatherMapApiKey;
+  }
 
   getCurrentWeather(city: string, units: WeatherUnit = 'metric'): Observable<CurrentWeather> {
     if (!city || !city.trim()) {

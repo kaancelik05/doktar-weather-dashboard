@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection, ErrorHandler } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -6,6 +6,11 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { routes } from './app.routes';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { GlobalErrorHandler } from './core/services/error-handler.service';
+import { ConfigService } from './core/services/config.service';
+
+function initializeConfig(configService: ConfigService) {
+  return () => configService.loadConfig();
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +25,12 @@ export const appConfig: ApplicationConfig = {
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeConfig,
+      deps: [ConfigService],
+      multi: true
     }
   ]
 };

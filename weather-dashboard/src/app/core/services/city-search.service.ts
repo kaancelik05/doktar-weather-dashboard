@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, catchError, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ConfigService } from './config.service';
 
 export interface CitySearchResult {
   id: number;
@@ -35,13 +36,19 @@ export interface GeoCitiesResponse {
   providedIn: 'root'
 })
 export class CitySearchService {
-  private readonly API_BASE_URL = environment.geodb.baseUrl;
-  private readonly API_HEADERS = {
-    'X-RapidAPI-Key': environment.geodb.apiKey,
-    'X-RapidAPI-Host': environment.geodb.host
-  };
-
   private http = inject(HttpClient);
+  private configService = inject(ConfigService);
+
+  private get API_BASE_URL(): string {
+    return this.configService.geoDbConfig.baseUrl;
+  }
+
+  private get API_HEADERS() {
+    return {
+      'X-RapidAPI-Key': this.configService.geoDbConfig.apiKey,
+      'X-RapidAPI-Host': this.configService.geoDbConfig.host
+    };
+  }
 
   searchCities(query: string, limit = 8): Observable<CitySearchResult[]> {
     if (!query || query.length < 3) {
@@ -49,7 +56,8 @@ export class CitySearchService {
     }
 
     // API key varsa gerçek API'yi kullan, yoksa mock data döndür
-    if (environment.geodb.apiKey && environment.geodb.apiKey !== 'YOUR_GEODB_API_KEY_HERE') {
+    const apiKey = this.configService.geoDbConfig.apiKey;
+    if (apiKey && apiKey !== 'YOUR_GEODB_API_KEY_HERE') {
       return this.searchCitiesFromAPI(query, limit);
     } else {
       // Fallback to mock data
