@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+---
+
+# Angular Development Rules
+
+- Use Angular 20 with TypeScript strict mode enabled.
+- Follow Angular style guide: 
+  - Use feature-based folder structure (`/features`, `/shared`, `/core`).
+  - Use standalone components (`standalone: true`) instead of NgModules.
+  - Use OnPush change detection strategy in all components.
+  - Prefix all components with `app-`.
+- State management must use Angular **Signals**, not NgRx or BehaviorSubject.
+- Keep components dumb/presentational where possible, push business logic into services.
+- Always type inputs/outputs, avoid `any`.
+- Use RxJS only for HTTP calls or when combining async streams, not for global state.
+- Follow clean architecture:
+  - `/core`: services, interceptors, models.
+  - `/features`: feature components.
+  - `/shared`: UI components, directives, pipes.
+
