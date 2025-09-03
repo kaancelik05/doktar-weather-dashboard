@@ -182,7 +182,7 @@ export class WeatherStateService {
   private geolocationService = inject(GeolocationService);
 
   // Actions
-  async loadWeatherData(city: string, isUserInitiated: boolean = true): Promise<void> {
+  async loadWeatherData(city: string, isUserInitiated = true): Promise<void> {
     if (!city || !city.trim()) {
       this.toastService.error('Error', 'City name cannot be empty');
       return;
@@ -514,7 +514,7 @@ export class WeatherStateService {
   }
 
   // User preference management
-  private setUserPreference(key: string, value: any): void {
+  private setUserPreference(key: string, value: unknown): void {
     try {
       const preferences = this.getUserPreferences();
       preferences[key] = value;
@@ -524,7 +524,7 @@ export class WeatherStateService {
     }
   }
 
-  private getUserPreference(key: string, defaultValue: any = null): any {
+  private getUserPreference(key: string, defaultValue: unknown = null): unknown {
     try {
       const preferences = this.getUserPreferences();
       return preferences[key] !== undefined ? preferences[key] : defaultValue;
@@ -534,7 +534,7 @@ export class WeatherStateService {
     }
   }
 
-  private getUserPreferences(): any {
+  private getUserPreferences(): Record<string, unknown> {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEYS.USER_PREFERENCE);
       return stored ? JSON.parse(stored) : {};
@@ -545,6 +545,6 @@ export class WeatherStateService {
   }
 
   private hasUserManuallySelectedCity(): boolean {
-    return this.getUserPreference('manual_city_selected', false);
+    return this.getUserPreference('manual_city_selected', false) as boolean;
   }
 }

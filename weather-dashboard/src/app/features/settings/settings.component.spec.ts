@@ -11,7 +11,7 @@ import { WeatherUnit, WeatherSettings } from '../../core/models';
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
   let fixture: ComponentFixture<SettingsComponent>;
-  let mockWeatherStateService: any;
+  let mockWeatherStateService: Partial<WeatherStateService>;
   let mockToastService: jasmine.SpyObj<ToastService>;
 
   const mockSettings: WeatherSettings = {
@@ -150,15 +150,15 @@ describe('SettingsComponent', () => {
   });
 
   it('should perform reset settings when confirmed', () => {
-    spyOn(component as any, 'performResetSettings').and.callFake(() => {
-      mockWeatherStateService.resetAllData();
+    spyOn(component as { performResetSettings: () => void }, 'performResetSettings').and.callFake(() => {
+      (mockWeatherStateService.resetAllData as jasmine.Spy)();
       // Don't call window.location.reload in tests
     });
     
     component.resetSettings();
     component.onDialogConfirmed();
 
-    expect((component as any).performResetSettings).toHaveBeenCalled();
+    expect((component as { performResetSettings: () => void }).performResetSettings).toHaveBeenCalled();
     expect(component.isConfirmDialogOpen()).toBe(false);
   });
 
@@ -170,18 +170,18 @@ describe('SettingsComponent', () => {
   });
 
   it('should handle dialog confirmation for different actions', () => {
-    spyOn(component as any, 'performClearCache');
-    spyOn(component as any, 'performResetSettings');
+    spyOn(component as { performClearCache: () => void }, 'performClearCache');
+    spyOn(component as { performResetSettings: () => void }, 'performResetSettings');
 
     // Test clear cache
     component.clearCache();
     component.onDialogConfirmed();
-    expect((component as any).performClearCache).toHaveBeenCalled();
+    expect((component as { performClearCache: () => void }).performClearCache).toHaveBeenCalled();
 
     // Test reset settings
     component.resetSettings();
     component.onDialogConfirmed();
-    expect((component as any).performResetSettings).toHaveBeenCalled();
+    expect((component as { performResetSettings: () => void }).performResetSettings).toHaveBeenCalled();
   });
 
   it('should handle metric unit selection', () => {
@@ -195,6 +195,6 @@ describe('SettingsComponent', () => {
   });
 
   it('should initialize with correct pending action state', () => {
-    expect((component as any).pendingAction).toBeNull();
+    expect((component as { pendingAction: string | null }).pendingAction).toBeNull();
   });
 });

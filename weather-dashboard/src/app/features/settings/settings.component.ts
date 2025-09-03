@@ -87,9 +87,9 @@ import { WeatherUnit } from '../../core/models';
 
         <!-- Default City -->
         <div class="space-y-3">
-          <label class="block text-sm font-medium text-secondary-700 dark:text-gray-300">
+          <h3 class="block text-sm font-medium text-secondary-700 dark:text-gray-300">
             Default City
-          </label>
+          </h3>
           <app-smart-search-input
             placeholder="Search for a city..."
             (citySelected)="onDefaultCitySelected($event)"

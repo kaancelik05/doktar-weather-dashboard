@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, input, output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
 
@@ -19,7 +19,11 @@ export interface ConfirmDialogData {
     <div 
       class="fixed inset-0 z-50 overflow-y-auto"
       [class.hidden]="!isOpen()"
+      tabindex="0"
       (click)="onBackdropClick($event)"
+      (keydown.escape)="onCancel()"
+      (keydown.enter)="onCancel()"
+      (keydown.space)="onCancel()"
     >
       <!-- Backdrop -->
       <div 
@@ -36,7 +40,14 @@ export interface ConfirmDialogData {
           [class.scale-100]="isOpen()"
           [class.opacity-0]="!isOpen()"
           [class.opacity-100]="isOpen()"
+          role="dialog"
+          [attr.aria-modal]="true"
+          [attr.aria-labelledby]="'dialog-title'"
+          [attr.aria-describedby]="'dialog-description'"
+          tabindex="0"
           (click)="$event.stopPropagation()"
+          (keydown.enter)="$event.stopPropagation()"
+          (keydown.space)="$event.stopPropagation()"
         >
           <!-- Icon -->
           <div class="sm:flex sm:items-start">
@@ -95,11 +106,11 @@ export interface ConfirmDialogData {
 
             <!-- Content -->
             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-              <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+              <h3 id="dialog-title" class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
                 {{ data().title }}
               </h3>
               <div class="mt-2">
-                <p class="text-sm text-gray-500 dark:text-gray-400">
+                <p id="dialog-description" class="text-sm text-gray-500 dark:text-gray-400">
                   {{ data().message }}
                 </p>
               </div>

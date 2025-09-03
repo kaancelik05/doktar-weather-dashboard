@@ -4,13 +4,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MainWeatherCardComponent } from './main-weather-card.component';
 import { CurrentWeather, WeatherSettings } from '../../../../core/models';
 
-interface DailyTemperatures {
-  morning: number;
-  afternoon: number;
-  evening: number;
-  night: number;
-}
-
 describe('MainWeatherCardComponent', () => {
   let component: MainWeatherCardComponent;
   let fixture: ComponentFixture<MainWeatherCardComponent>;

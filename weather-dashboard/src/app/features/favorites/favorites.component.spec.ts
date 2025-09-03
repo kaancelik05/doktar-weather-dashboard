@@ -6,12 +6,12 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { FavoritesComponent } from './favorites.component';
 import { WeatherStateService } from '../../core/services/weather-state.service';
-import { FavoriteCity, CurrentWeather, WeatherSettings } from '../../core/models';
+import { FavoriteCity, CurrentWeather } from '../../core/models';
 
 describe('FavoritesComponent', () => {
   let component: FavoritesComponent;
   let fixture: ComponentFixture<FavoritesComponent>;
-  let mockWeatherStateService: any;
+  let mockWeatherStateService: Partial<WeatherStateService>;
   let mockRouter: jasmine.SpyObj<Router>;
 
   const mockFavoriteCity: FavoriteCity = {

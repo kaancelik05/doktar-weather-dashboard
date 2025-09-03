@@ -183,9 +183,9 @@ export class GeolocationService {
   /**
    * Geolocation hatalarını kullanıcı dostu mesajlara çevirir
    */
-  private mapGeolocationError(error: any): Error {
-    if (error?.code) {
-      switch (error.code) {
+  private mapGeolocationError(error: GeolocationPositionError | Error | unknown): Error {
+    if (error && typeof error === 'object' && 'code' in error) {
+      switch ((error as GeolocationPositionError).code) {
         case 1: // PERMISSION_DENIED
           return new Error('Location access permission denied. Please enable location services and try again.');
         case 2: // POSITION_UNAVAILABLE
@@ -197,19 +197,19 @@ export class GeolocationService {
       }
     }
     
-    if (error?.name === 'TimeoutError') {
+    if (error && typeof error === 'object' && 'name' in error && (error as Error).name === 'TimeoutError') {
       return new Error('Location request timed out. Please try again.');
     }
     
-    return new Error(error?.message || 'Unable to get your location.');
+    return new Error((error as Error)?.message || 'Unable to get your location.');
   }
 
   /**
    * Hata mesajlarını kullanıcı dostu hale getirir
    */
-  private getErrorMessage(error: any): string {
-    if (error?.message) {
-      return error.message;
+  private getErrorMessage(error: Error | string | unknown): string {
+    if (error && typeof error === 'object' && 'message' in error) {
+      return (error as Error).message;
     }
     
     if (typeof error === 'string') {
