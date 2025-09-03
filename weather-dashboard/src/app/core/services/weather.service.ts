@@ -3,7 +3,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, timeout, retryWhen, delay, take } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CurrentWeather, ForecastData, WeatherUnit } from '../models/weather.model';
-import { environment } from '../../../environments/environment';
 import { ToastService } from './toast.service';
 import { ConfigService } from './config.service';
 

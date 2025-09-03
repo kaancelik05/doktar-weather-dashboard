@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, catchError, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { ConfigService } from './config.service';
 
 export interface CitySearchResult {

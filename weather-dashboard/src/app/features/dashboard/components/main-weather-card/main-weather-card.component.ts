@@ -29,61 +29,73 @@ interface DailyTemperatures {
       <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20"></div>
       
       <div class="relative z-10">
-        <!-- Location, Weather Stats and Date -->
-        <div class="flex items-center justify-between mb-6">
-          <!-- Location -->
-          <div class="flex items-center space-x-2">
-            <svg class="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span class="text-lg font-semibold">{{ currentWeather?.name }}</span>
+        <!-- Location, Date and Weather Stats - Aligned Layout -->
+        <div class="mb-6">
+          <!-- Mobile: Compact horizontal layout -->
+          <div class="flex items-start justify-between gap-2 lg:gap-4">
+            <!-- Left Side: Location and Date -->
+            <div class="flex-shrink-0">
+              <!-- Location -->
+              <div class="flex items-center space-x-2 mb-1">
+                <svg class="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span class="text-lg font-semibold">{{ currentWeather?.name }}</span>
+              </div>
+              
+              <!-- Date - Always visible, under location -->
+              <div class="pl-7">
+                <span class="text-white/70 text-sm">{{ getCurrentTime() }}</span>
+              </div>
+            </div>
+            
+            <!-- Right Side: Weather Stats - Right Aligned Section -->
+            <div class="flex-1 min-w-0 flex justify-end">
+              <div class="flex flex-col items-start gap-1 sm:grid sm:grid-cols-3 sm:gap-2 lg:flex lg:flex-row lg:items-center lg:space-x-4 lg:gap-0">
+                <div class="flex items-center space-x-1.5">
+                  <div class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span class="text-xs">👁</span>
+                  </div>
+                  <div class="text-left">
+                    <div class="text-xs text-white/60 leading-tight">Visibility</div>
+                    <div class="text-xs font-semibold leading-tight">{{ (currentWeather?.visibility || 0) / 1000 }}km</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center space-x-1.5">
+                  <div class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span class="text-xs">🌡️</span>
+                  </div>
+                  <div class="text-left">
+                    <div class="text-xs text-white/60 leading-tight">Feels like</div>
+                    <div class="text-xs font-semibold leading-tight">{{ getFeelsLike() }}</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center space-x-1.5">
+                  <div class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span class="text-xs">🌧️</span>
+                  </div>
+                  <div class="text-left">
+                    <div class="text-xs text-white/60 leading-tight">Rain chance</div>
+                    <div class="text-xs font-semibold leading-tight">{{ getRainChance() }}%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          
-          <!-- Weather Stats -->
-          <div class="flex items-center space-x-6">
-            <div class="flex items-center space-x-2">
-              <div class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                <span class="text-xs">👁</span>
-              </div>
-              <div class="text-center">
-                <div class="text-xs text-white/60">Visibility</div>
-                <div class="text-sm font-semibold">{{ (currentWeather?.visibility || 0) / 1000 }}km</div>
-              </div>
-            </div>
-            <div class="flex items-center space-x-2">
-              <div class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                <span class="text-xs">🌡️</span>
-              </div>
-              <div class="text-center">
-                <div class="text-xs text-white/60">Feels like</div>
-                <div class="text-sm font-semibold">{{ getFeelsLike() }}</div>
-              </div>
-            </div>
-            <div class="flex items-center space-x-2">
-              <div class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                <span class="text-xs">🌧️</span>
-              </div>
-              <div class="text-center">
-                <div class="text-xs text-white/60">Rain chance</div>
-                <div class="text-sm font-semibold">{{ getRainChance() }}%</div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Date -->
-          <span class="text-white/80">{{ getCurrentTime() }}</span>
         </div>
 
         <!-- Main Weather Display -->
         <div class="flex items-center justify-between mb-8">
-          <div>
-            <div class="text-6xl font-light mb-2">{{ getMainTemperature() }}</div>
-            <div class="text-xl text-white/80 capitalize">{{ weatherCondition }}</div>
+          <div class="flex-1">
+            <div class="text-4xl sm:text-5xl md:text-6xl font-light mb-2">{{ getMainTemperature() }}</div>
+            <div class="text-lg sm:text-xl text-white/80 capitalize">{{ weatherCondition }}</div>
           </div>
-          <div class="text-right">
+          <div class="flex-shrink-0 ml-4">
             <!-- Modern Weather Icon -->
-            <div class="w-24 h-24 flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-2xl">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-2xl">
               <div [innerHTML]="getWeatherSVG(weatherIcon, weatherCondition, 'large')"></div>
             </div>
           </div>
@@ -105,35 +117,35 @@ interface DailyTemperatures {
           </div>
           
           <!-- Temperature Labels Grid -->
-          <div class="flex justify-between items-center relative" *ngIf="dailyTemperatures">
-            <!-- Morning - En sol -->
-            <div class="text-left">
+          <div class="grid grid-cols-4 gap-1 text-center" *ngIf="dailyTemperatures">
+            <!-- Morning -->
+            <div>
               <div class="text-xs text-white/60 mb-1">Morning</div>
-              <div class="text-sm font-medium text-white">
+              <div class="text-xs sm:text-sm font-medium text-white">
                 {{ formatTemperatureValue(dailyTemperatures.morning) }}
               </div>
             </div>
             
-            <!-- Afternoon - Soldan %33 -->
-            <div class="absolute left-[33%] transform -translate-x-1/2 text-center">
+            <!-- Afternoon -->
+            <div>
               <div class="text-xs text-white/60 mb-1">Afternoon</div>
-              <div class="text-sm font-medium text-white">
+              <div class="text-xs sm:text-sm font-medium text-white">
                 {{ formatTemperatureValue(dailyTemperatures.afternoon) }}
               </div>
             </div>
             
-            <!-- Evening - Soldan %67 -->
-            <div class="absolute left-[67%] transform -translate-x-1/2 text-center">
+            <!-- Evening -->
+            <div>
               <div class="text-xs text-white/60 mb-1">Evening</div>
-              <div class="text-sm font-medium text-white">
+              <div class="text-xs sm:text-sm font-medium text-white">
                 {{ formatTemperatureValue(dailyTemperatures.evening) }}
               </div>
             </div>
             
-            <!-- Night - En sağ -->
-            <div class="text-right">
+            <!-- Night -->
+            <div>
               <div class="text-xs text-white/60 mb-1">Night</div>
-              <div class="text-sm font-medium text-white">
+              <div class="text-xs sm:text-sm font-medium text-white">
                 {{ formatTemperatureValue(dailyTemperatures.night) }}
               </div>
             </div>

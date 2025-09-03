@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent } from '../button/button.component';
 
 export interface ConfirmDialogData {
   title: string;
@@ -13,7 +12,7 @@ export interface ConfirmDialogData {
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div 
@@ -119,23 +118,21 @@ export interface ConfirmDialogData {
 
           <!-- Actions -->
           <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-            <app-button
-              [variant]="getConfirmButtonVariant()"
-              [size]="'sm'"
+            <button
+              [class]="getConfirmButtonClasses()"
               class="w-full sm:ml-3 sm:w-auto"
               (click)="onConfirm()"
             >
               {{ data().confirmText || 'Confirm' }}
-            </app-button>
-            
-            <app-button
-              variant="outline"
-              [size]="'sm'"
-              class="mt-3 w-full sm:mt-0 sm:w-auto"
+            </button>
+
+            <button
+              [class]="getCancelButtonClasses()"
+              class="mt-3 w-full sm:mt-0 sm:ml-3 sm:w-auto"
               (click)="onCancel()"
             >
               {{ data().cancelText || 'Cancel' }}
-            </app-button>
+            </button>
           </div>
         </div>
       </div>
@@ -166,18 +163,25 @@ export class ConfirmDialogComponent {
     }
   }
 
-  getConfirmButtonVariant(): 'primary' | 'warning' | 'danger' {
+    getConfirmButtonClasses(): string {
     const type = this.data().type || 'info';
-    
+    const baseClasses = 'inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed';
+
     switch (type) {
       case 'warning':
-        return 'warning';
+        return `${baseClasses} bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white focus:ring-yellow-500`;
       case 'danger':
-        return 'danger';
+        return `${baseClasses} bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white focus:ring-red-500`;
       case 'info':
       default:
-        return 'primary';
+        return `${baseClasses} bg-primary-600 hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 text-white focus:ring-primary-500`;
     }
+  }
+
+  getCancelButtonClasses(): string {
+    const baseClasses = 'inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed';
+    // Cancel button için gri renk kullanıyoruz - confirm button'dan farklı ama nötr
+    return `${baseClasses} bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-700 text-white focus:ring-gray-500`;
   }
 
   onConfirm(): void {

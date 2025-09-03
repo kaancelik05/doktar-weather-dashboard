@@ -40,6 +40,22 @@ export interface SearchSuggestion {
           </svg>
         </div>
 
+        <!-- Clear Search Icon -->
+        <button
+          *ngIf="searchQuery()"
+          type="button"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
+          (click)="clearSearch(searchInput)"
+          (keydown.enter)="clearSearch(searchInput)"
+          (keydown.space)="clearSearch(searchInput)"
+          title="Aramayı temizle"
+          aria-label="Aramayı temizle"
+        >
+          <svg class="h-5 w-5 text-secondary-400 dark:text-gray-400 hover:text-secondary-600 dark:hover:text-gray-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
         <!-- Search Suggestions Dropdown -->
       <div 
         *ngIf="showSuggestions() && (filteredSuggestions().length > 0 || (searchQuery() && searchQuery().length > 0 && searchQuery().length < 3))"
@@ -268,10 +284,22 @@ export class SmartSearchInputComponent implements OnDestroy {
     this.citySelected.emit(cityName);
   }
 
-  clearSearch(): void {
+  clearSearch(searchInput?: HTMLInputElement): void {
     this.searchQuery.set('');
     this.showSuggestions.set(false);
     this.selectedSuggestionIndex.set(-1);
+    this.apiCities.set([]);
+    this.searchLoading.set(false);
+
+    // Emit empty search query change
+    this.searchQueryChanged.emit('');
+
+    // Keep focus on input if element is provided
+    if (searchInput) {
+      setTimeout(() => {
+        searchInput.focus();
+      }, 0);
+    }
   }
 
   // Public method to set search query programmatically

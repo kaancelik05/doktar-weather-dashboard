@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class ConfigService {
-  private config: any = null;
+  private config: Record<string, unknown> | null = null;
 
   async loadConfig(): Promise<void> {
     if (environment.production) {
@@ -17,9 +17,9 @@ export class ConfigService {
         } else {
           // Fallback: environment variable'ları doğrudan kullan
           this.config = {
-            openWeatherMapApiKey: (window as any)?.ENV?.OPENWEATHER_API_KEY || '',
+            openWeatherMapApiKey: (window as unknown as Record<string, Record<string, string>>)?.['ENV']?.['OPENWEATHER_API_KEY'] || '',
             geodb: {
-              apiKey: (window as any)?.ENV?.GEODB_API_KEY || '',
+              apiKey: (window as unknown as Record<string, Record<string, string>>)?.['ENV']?.['GEODB_API_KEY'] || '',
               baseUrl: environment.geodb.baseUrl,
               host: environment.geodb.host
             }
@@ -36,10 +36,10 @@ export class ConfigService {
   }
 
   get openWeatherMapApiKey(): string {
-    return this.config?.openWeatherMapApiKey || environment.openWeatherMapApiKey;
+    return (this.config?.['openWeatherMapApiKey'] as string) || environment.openWeatherMapApiKey;
   }
 
   get geoDbConfig() {
-    return this.config?.geodb || environment.geodb;
+    return (this.config?.['geodb'] as typeof environment.geodb) || environment.geodb;
   }
 }
