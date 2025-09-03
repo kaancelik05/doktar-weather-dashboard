@@ -1,0 +1,17 @@
+---
+alwaysApply: true
+---
+
+# UI & UX Rules
+
+- Use Angular + TailwindCSS for styling.
+- Use responsive layouts (flex, grid) with mobile-first design.
+- Use semantic HTML elements.
+- Weather dashboard must include:
+  - Current weather component.
+  - 5-day forecast component.
+  - Settings panel (unit toggle: °C / °F).
+  - Favorite cities list.
+- Follow accessibility best practices (alt text, aria labels, proper color contrast).
+- Prefer reusable UI components (e.g., button, card, input).
+

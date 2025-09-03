@@ -1,0 +1,24 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Weather Dashboard Case Study Rules
+
+- Application must fetch weather data from OpenWeatherMap API.
+- Store weather state in a global **WeatherState service** using Angular Signals.
+- Components:
+  - `CurrentWeatherComponent` → shows temperature, condition, icon.
+  - `ForecastComponent` → shows 5-day forecast in a grid layout.
+  - `SettingsComponent` → toggles unit (metric/imperial).
+  - `FavoritesComponent` → list of saved cities, click to reload weather.
+- Folder structure:
+  - `/core/models`
+  - `/core/services`
+  - `/features/weather`
+  - `/features/settings`
+  - `/shared/components`
+- Must implement error handling and loading states.
+- Must be responsive and production-ready.
+
