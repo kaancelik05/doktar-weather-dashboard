@@ -89,7 +89,7 @@ describe('SettingsComponent', () => {
   });
 
   it('should handle default city selection with load error', async () => {
-    mockWeatherStateService.loadWeatherData.and.returnValue(Promise.reject('Network error'));
+    (mockWeatherStateService.loadWeatherData as jasmine.Spy).and.returnValue(Promise.reject('Network error'));
     spyOn(console, 'error');
 
     await component.onDefaultCitySelected('InvalidCity');
@@ -141,7 +141,6 @@ describe('SettingsComponent', () => {
     component.onDialogConfirmed();
 
     expect(localStorage.removeItem).toHaveBeenCalledWith('weather-cache');
-    expect(console.log).toHaveBeenCalledWith('Cache cleared');
     expect(mockToastService.success).toHaveBeenCalledWith(
       'Cache Cleared',
       'All cached weather data has been successfully removed.'
@@ -150,7 +149,7 @@ describe('SettingsComponent', () => {
   });
 
   it('should perform reset settings when confirmed', () => {
-    spyOn(component as { performResetSettings: () => void }, 'performResetSettings').and.callFake(() => {
+    spyOn(component as unknown as { performResetSettings: () => void }, 'performResetSettings').and.callFake(() => {
       (mockWeatherStateService.resetAllData as jasmine.Spy)();
       // Don't call window.location.reload in tests
     });
@@ -158,7 +157,7 @@ describe('SettingsComponent', () => {
     component.resetSettings();
     component.onDialogConfirmed();
 
-    expect((component as { performResetSettings: () => void }).performResetSettings).toHaveBeenCalled();
+    expect((component as unknown as { performResetSettings: () => void }).performResetSettings).toHaveBeenCalled();
     expect(component.isConfirmDialogOpen()).toBe(false);
   });
 
@@ -170,18 +169,18 @@ describe('SettingsComponent', () => {
   });
 
   it('should handle dialog confirmation for different actions', () => {
-    spyOn(component as { performClearCache: () => void }, 'performClearCache');
-    spyOn(component as { performResetSettings: () => void }, 'performResetSettings');
+    spyOn(component as unknown as { performClearCache: () => void }, 'performClearCache');
+    spyOn(component as unknown as { performResetSettings: () => void }, 'performResetSettings');
 
     // Test clear cache
     component.clearCache();
     component.onDialogConfirmed();
-    expect((component as { performClearCache: () => void }).performClearCache).toHaveBeenCalled();
+    expect((component as unknown as { performClearCache: () => void }).performClearCache).toHaveBeenCalled();
 
     // Test reset settings
     component.resetSettings();
     component.onDialogConfirmed();
-    expect((component as { performResetSettings: () => void }).performResetSettings).toHaveBeenCalled();
+    expect((component as unknown as { performResetSettings: () => void }).performResetSettings).toHaveBeenCalled();
   });
 
   it('should handle metric unit selection', () => {
@@ -195,6 +194,6 @@ describe('SettingsComponent', () => {
   });
 
   it('should initialize with correct pending action state', () => {
-    expect((component as { pendingAction: string | null }).pendingAction).toBeNull();
+    expect((component as unknown as { pendingAction: string | null }).pendingAction).toBeNull();
   });
 });

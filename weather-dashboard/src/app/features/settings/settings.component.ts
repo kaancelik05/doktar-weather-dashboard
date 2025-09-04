@@ -184,7 +184,6 @@ export class SettingsComponent {
     if (cityName.trim()) {
       // Update default city in settings
       this.weatherState.setDefaultCity(cityName);
-      console.log('Default city selected:', cityName);
       
       // Immediately load weather data for the new default city
       try {
@@ -257,7 +256,6 @@ export class SettingsComponent {
   private performClearCache(): void {
     // Clear any cached data
     localStorage.removeItem('weather-cache');
-    console.log('Cache cleared');
     
     // Show success toast
     this.toastService.success(
@@ -269,8 +267,6 @@ export class SettingsComponent {
   private performResetSettings(): void {
     // Reset all data including current city
     this.weatherState.resetAllData();
-    
-    console.log('Settings reset! The page will be reloaded.');
     
     // Reload the page to apply changes
     window.location.reload();

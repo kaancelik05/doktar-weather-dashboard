@@ -107,7 +107,6 @@ import { ThemeService } from './core/services/theme.service';
                 width="min(400px, 90vw)"
                 [showBadge]="false"
                 triggerButtonClass=""
-                (itemClicked)="onNavigationItemClicked($event)"
               >
                 <div slot="trigger" class="flex items-center space-x-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer">
                   <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -158,11 +157,6 @@ export class AppComponent {
       description: 'Application preferences and configuration'
     }
   ];
-
-  onNavigationItemClicked(item: PopoverItem): void {
-    // Router navigation is handled automatically by routerLink
-    console.log('Navigation item clicked:', item.label);
-  }
 
   toggleUnit(): void {
     const currentUnit = this.weatherState.settings().unit;

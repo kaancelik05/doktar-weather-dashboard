@@ -414,7 +414,6 @@ export class WeatherStateService {
 
     // Eğer kullanıcı daha önce manuel olarak şehir seçmişse, geolocation kullanma
     if (this.hasUserManuallySelectedCity()) {
-      console.log('User has manually selected a city, using default city instead of location');
       const defaultCity = this._settings().defaultCity;
       if (defaultCity) {
         await this.loadWeatherData(defaultCity, false);
@@ -434,13 +433,11 @@ export class WeatherStateService {
 
     try {
       // Loading state'i ayarla (sadece konum için)
-      console.log('Getting user location...');
       
       // Kullanıcının konumunu al
       const result = await this.geolocationService.getCurrentLocation().toPromise();
       
       if (result?.cityName) {
-        console.log('Location detected:', result.cityName);
         
         // Tespit edilen şehir ile hava durumu verilerini yükle (automatic, not user-initiated)
         await this.loadWeatherData(result.cityName, false);
@@ -459,7 +456,6 @@ export class WeatherStateService {
       // Konum alınamazsa varsayılan şehri kullan
       const defaultCity = this._settings().defaultCity;
       if (defaultCity) {
-        console.log('Falling back to default city:', defaultCity);
         await this.loadWeatherData(defaultCity, false);
       }
     }

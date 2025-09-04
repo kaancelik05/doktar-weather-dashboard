@@ -283,14 +283,11 @@ export class CitySearchService {
       languageCode: 'en' // İngilizce sonuçlar
     };
 
-    console.log('Searching cities with GeoDB API:', { query, limit });
-
     return this.http.get<GeoCitiesResponse>(`${this.API_BASE_URL}/cities`, {
       params,
       headers: this.API_HEADERS
     }).pipe(
       map(response => {
-        console.log('GeoDB API response:', response);
         return response.data.map(city => ({
           id: city.id,
           name: city.name,

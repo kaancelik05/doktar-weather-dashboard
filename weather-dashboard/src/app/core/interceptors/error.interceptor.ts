@@ -25,7 +25,6 @@ export class ErrorInterceptor implements HttpInterceptor {
         
         // Only retry for certain error types and within retry limit
         if (retryAttempt <= this.MAX_RETRIES && this.shouldRetry(error)) {
-          console.log(`Attempting retry ${retryAttempt}/${this.MAX_RETRIES} after ${this.RETRY_DELAY}ms`);
           return timer(this.RETRY_DELAY);
         }
         
@@ -49,11 +48,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     if (error.error instanceof ErrorEvent) {
       // Client-side/network error
       errorMessage = 'Please check your internet connection';
-      console.error('Client-side error:', error.error.message);
     } else {
-      // Server-side error
-      console.error('Server-side error:', error);
-      
       switch (error.status) {
         case 0:
           errorMessage = 'Please check your internet connection';
