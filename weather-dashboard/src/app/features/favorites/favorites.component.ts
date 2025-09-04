@@ -1,15 +1,16 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WeatherStateService } from '../../core/services/weather-state.service';
 import { CardComponent, ButtonComponent, LoaderComponent, SmartSearchInputComponent } from '../../shared/components';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { FavoriteCity } from '../../core/models';
 
 @Component({
   selector: 'app-favorites',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardComponent, ButtonComponent, LoaderComponent, SmartSearchInputComponent],
+  imports: [CommonModule, FormsModule, CardComponent, ButtonComponent, LoaderComponent, SmartSearchInputComponent, ConfirmDialogComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-card [title]="'Favorite Cities'" [subtitle]="'Manage your saved cities'">
@@ -168,6 +169,15 @@ import { FavoriteCity } from '../../core/models';
           </div>
         </div>
       </div>
+
+      <!-- Confirm Dialog Component -->
+      <app-confirm-dialog
+        [isOpen]="isConfirmDialogOpen()"
+        [data]="confirmDialogData()"
+        (confirmed)="onRemoveConfirmed()"
+        (cancelled)="onDialogClosed()"
+        (closed)="onDialogClosed()"
+      ></app-confirm-dialog>
     </app-card>
   `
 })
@@ -177,6 +187,15 @@ export class FavoritesComponent {
 
   readonly popularCities = ['Istanbul', 'London', 'New York', 'Tokyo', 'Paris', 'Berlin'];
   selectedCityName = '';
+  isConfirmDialogOpen = signal<boolean>(false);
+  confirmDialogData = signal<ConfirmDialogData>({
+    title: '',
+    message: '',
+    confirmText: 'Remove',
+    cancelText: 'Cancel',
+    type: 'danger'
+  });
+  cityToRemove = signal<FavoriteCity | null>(null);
 
   trackByCity(index: number, city: FavoriteCity): string {
     return city.id;
@@ -232,11 +251,28 @@ export class FavoritesComponent {
   }
 
   removeFromFavorites(city: FavoriteCity): void {
-    const confirmed = confirm(`Are you sure you want to remove ${city.name} from your favorites?`);
-    
-    if (confirmed) {
-      this.weatherState.removeFromFavorites(city.name);
+    this.cityToRemove.set(city);
+    this.confirmDialogData.set({
+      title: `Remove ${city.name} from favorites?`,
+      message: `Are you sure you want to remove ${city.name} from your favorites? This action cannot be undone.`,
+      confirmText: 'Remove',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    this.isConfirmDialogOpen.set(true);
+  }
+
+  onRemoveConfirmed(): void {
+    if (this.cityToRemove()) {
+      this.weatherState.removeFromFavorites(this.cityToRemove()!.name);
     }
+    this.cityToRemove.set(null);
+    this.isConfirmDialogOpen.set(false);
+  }
+
+  onDialogClosed(): void {
+    this.cityToRemove.set(null);
+    this.isConfirmDialogOpen.set(false);
   }
 
   isCurrentCity(city: FavoriteCity): boolean {
