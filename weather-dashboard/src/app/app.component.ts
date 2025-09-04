@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastComponent, PopoverComponent, PopoverItem } from './shared/components';
 import { WeatherStateService } from './core/services/weather-state.service';
@@ -18,7 +18,7 @@ import { ThemeService } from './core/services/theme.service';
           <div class="flex items-center justify-between h-16">
             <!-- Left Section: Logo and Brand -->
             <div class="flex items-center space-x-4">
-              <div class="flex items-center space-x-3">
+              <div class="flex items-center space-x-3 cursor-pointer" role="link" tabindex="0" (click)="navigateToDashboard()" (keyup.enter)="navigateToDashboard()">
                 <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
                   <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
@@ -135,6 +135,7 @@ export class AppComponent {
   title = 'weather-dashboard';
   weatherState = inject(WeatherStateService);
   themeService = inject(ThemeService);
+  private readonly router: Router = inject(Router);
 
   // Navigation items for the popover
   navigationItems: PopoverItem[] = [
@@ -183,5 +184,9 @@ export class AppComponent {
     return this.themeService.isDarkMode() 
       ? 'Açık temaya geç' 
       : 'Koyu temaya geç';
+  }
+
+  navigateToDashboard(): void {
+    this.router.navigate(['/dashboard']);
   }
 }
